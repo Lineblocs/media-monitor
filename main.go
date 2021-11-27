@@ -239,7 +239,8 @@ func main() {
     user := os.Getenv("AMI_USER")
     pass := os.Getenv("AMI_PASS")
     host := os.Getenv("AMI_HOST")
-	settings := &amigo.Settings{Username: user, Password: pass, Host: host}
+    port := os.Getenv("AMI_PORT")
+	settings := &amigo.Settings{Username: user, Password: pass, Host: host, Port: port}
 	ami = amigo.New(settings)
 	ami.Connect()
 	ami.On("connect", func(message string) {
