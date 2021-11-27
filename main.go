@@ -213,20 +213,15 @@ func main() {
 	}
 
 	for _, server := range servers {
-	//make it alive initially
-	server.Status = "ALIVE"
-fmt.Printf("comparing %s and %s\r\n", server.IpAddress,os.Getenv("IP_ADDRESS"));
-	if (server.IpAddress == os.Getenv("IP_ADDRESS")) {
-		fmt.Printf("Setting my own server!\r\n");
-		myServer = server
-	}
+        //make it alive initially
+        server.Status = "ALIVE"
+        fmt.Printf("comparing %s and %s\r\n", server.IpAddress,os.Getenv("IP_ADDRESS"));
+        if (server.IpAddress == os.Getenv("IP_ADDRESS")) {
+            fmt.Printf("Setting my own server!\r\n");
+            myServer = server
+        }
 
         fmt.Printf("adding server: ID %d, IP %s with initial status %s\r\n", server.Id, server.IpAddress, server.Status)
-	}
-
-	if myServer == nil {
-		fmt.Println("Unable to start own server..");
-		return
 	}
     data = &ServerData{
         mu: sync.RWMutex{}, servers: servers }
@@ -237,41 +232,32 @@ fmt.Printf("comparing %s and %s\r\n", server.IpAddress,os.Getenv("IP_ADDRESS"));
 		panic(err)
     }
 
-    var wg sync.WaitGroup
-    wg.Add(2)
-    go func() {
-        // Do work.
-        startSmudge(servers)
-        wg.Done()
-    }()
 	ticker := time.NewTicker(5 * time.Second)
 	quit := make(chan struct{})
-        // update the call counter every few seconds if we are not a router..
-	
 	fmt.Println("Init Amigo")
 
-	settings := &amigo.Settings{Username: "ami", Password: "ami", Host: "127.0.0.1"}
+    user := os.Getenv("AMI_USER")
+    pass := os.Getenv("AMI_PASS")
+    host := os.Getenv("AMI_HOST")
+	settings := &amigo.Settings{Username: user, Password: pass, Host: host}
 	ami = amigo.New(settings)
-
 	ami.Connect()
-
-	// Listen for connection events
 	ami.On("connect", func(message string) {
 
 		fmt.Println("Connected to AMI!!!!!!!!!!!", message)
-    go func() {
-	    for {
-	       select {
-		case <- ticker.C:
-		    // do stuff
-		updateLiveStats();
-		case <- quit:
-		    ticker.Stop()
-		    return
-		}
-	    }
-}()
-	});
+        go func() {
+            for {
+            select {
+                case <- ticker.C:
+                    // do stuff
+                updateLiveStats();
+                case <- quit:
+                    ticker.Stop()
+                    return
+                }
+            }
+        }()
+    });
 
 	ami.On("error", func(message string) {
 		fmt.Println("Connection error:", message)
@@ -294,5 +280,4 @@ fmt.Printf("comparing %s and %s\r\n", server.IpAddress,os.Getenv("IP_ADDRESS"));
 	
 	ch := make(chan bool)
 	<-ch
-    wg.Wait()
 }
