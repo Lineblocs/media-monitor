@@ -359,7 +359,10 @@ func main() {
 	}
     err=setupCurrentNode()
     if err != nil {
-	    fmt.Println("current node not found in DB...")
+        panic(err)
+    }
+    if currentNode==nil{
+        fmt.Println("current node not found yet...")
     }
 
 
