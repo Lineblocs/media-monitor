@@ -73,21 +73,13 @@ func (m MyStatusListener) OnChange(node *smudge.Node, status smudge.NodeStatus) 
             if node.Address() == server.Node.Address() { //change the node
                 server.Status = status.String()
 		fmt.Printf("setting server status to %s\r\n", server.Status);
-		err := lineblocs.UpdateLiveStat(server, "live_status",  server.Status)
+		err := SafeUpdateLiveStat(server, "live_status",  server.Status)
 		if err != nil {
 				fmt.Println("Could not update live server status..\r\n");
 			}
 
             }
         }
-    data.mu.Lock()
-
-    defer data.mu.Unlock()
-    data.servers =servers
-    for _, server := range servers {
-    	fmt.Printf("server %s status = %s \r\n", server.IpAddress, server.Status)
-	}
-
 }
 
 type MyBroadcastListener struct {
@@ -233,8 +225,27 @@ func getCPUSample() (idle, total uint64) {
     return
 }
 
+func SafeUpdateLiveStat(server *lineblocs.MediaServer, field string, value string) (error) {
+    if server == nil {
+        fmt.Println("server not found.. ")
+        return nil
+    }
+    err:=lineblocs.UpdateLiveStat(server, field,value)
+     if err != nil {
+        fmt.Println("Error: ", err)
+        return err
+    }
+    return nil
+}
 func updateLiveStats() {
 	fmt.Println("Updating live statistics..\r\n");
+
+	err := setupCurrentNode()
+    if err != nil {
+        fmt.Println("Could not setup current node..\r\n");
+        return
+    }
+
 	result, err := ami.Action(map[string]string{"Action": "Command", "Command": "core show channels"})
 	// If not error, processing result. Response on Action will follow in defined events.
 	// You need to catch them in event channel, DefaultHandler or specified HandlerFunction
@@ -245,7 +256,7 @@ func updateLiveStats() {
 			results := strings.Split(v, " ")
 			fmt.Printf("%s active calls\r\n", results[0]);
 			fmt.Printf("setting active calls  to %s\r\n",results[0]);
-			err = lineblocs.UpdateLiveStat(currentNode, "live_call_count",  results[0])
+			err = SafeUpdateLiveStat(currentNode, "live_call_count",  results[0])
 			if err != nil {
 				fmt.Println("Could not update live call count..\r\n");
 			}
@@ -257,23 +268,14 @@ func updateLiveStats() {
         fmt.Println("Error: ", err)
         return
     }
-    if total0 > 20 { // initiate auto scale
-        addNodeToCluster()
-    } else {
-        //removeNode()
-    }
-
-
     fmt.Sprintf("%f", total0)
-
-
 	fmt.Printf("CPU usage is at %f\r\n", total0);
-			cpuUsageStr := strconv.FormatFloat(total0, 'f', 6, 64)
-			fmt.Printf("setting cpu usage to %s\r\n",cpuUsageStr)
-			err = lineblocs.UpdateLiveStat(currentNode, "live_cpu_pct_used",  cpuUsageStr)
-			if err != nil {
-				fmt.Println("Could not update cpu usage..\r\n");
-			}
+    cpuUsageStr := strconv.FormatFloat(total0, 'f', 6, 64)
+    fmt.Printf("setting cpu usage to %s\r\n",cpuUsageStr)
+    err = SafeUpdateLiveStat(currentNode, "live_cpu_pct_used",  cpuUsageStr)
+    if err != nil {
+        fmt.Println("Could not update cpu usage..\r\n");
+    }
 
 
 }
@@ -325,14 +327,10 @@ func Status(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK) 
 }
 
-
-func main() {
-    var err error
-	fmt.Println("starting smudge node..");
-    channel = make(chan []*lineblocs.MediaServer)
-    servers,err = CreateMediaServers()
+func setupCurrentNode() (error) {
+    servers,err := CreateMediaServers()
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	for _, server := range servers {
@@ -347,6 +345,24 @@ func main() {
 
         fmt.Printf("adding server: ID %d, IP %s with initial status %s\r\n", server.Id, server.IpAddress, server.Status)
 	}
+    return nil
+}
+
+
+func main() {
+    var err error
+	fmt.Println("starting smudge node..");
+    channel = make(chan []*lineblocs.MediaServer)
+    servers,err = CreateMediaServers()
+	if err != nil {
+		panic(err)
+	}
+    err=setupCurrentNode()
+    if err != nil {
+		panic(err)
+    }
+
+
     data = &ServerData{
         mu: sync.RWMutex{}, servers: servers }
 
