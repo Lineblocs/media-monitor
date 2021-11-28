@@ -17,7 +17,9 @@ import (
 	"strconv"
 	"github.com/nadirhamid/amigo"
      metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-    "k8s.io/client-go/tools/clientcmd"
+
+	"k8s.io/client-go/rest"
+ _ "k8s.io/client-go/tools/clientcmd"
     metrics "k8s.io/metrics/pkg/client/clientset/versioned"
 	"k8s.io/client-go/kubernetes"
     	restclient "k8s.io/client-go/rest"
@@ -93,6 +95,7 @@ func (m MyBroadcastListener) OnBroadcast(b *smudge.Broadcast) {
 }
 
 func createK8sConfig() (kubernetes.Interface, *restclient.Config, error) {
+    /*
 	var kubeconfig string
 	kubeconfig= "/root/.kube/config"
 	// use the current context in kubeconfig
@@ -100,7 +103,11 @@ func createK8sConfig() (kubernetes.Interface, *restclient.Config, error) {
 	if err != nil {
 		return nil, nil, err
 	}
-
+    */
+	config, err := rest.InClusterConfig()
+	if err != nil {
+		return nil,nil,err
+	}
 	// create the clientset
 	clientset, err := kubernetes.NewForConfig(config)
 	if err != nil {
