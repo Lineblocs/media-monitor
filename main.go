@@ -11,7 +11,8 @@ import (
 "context"
 "errors"
    	"encoding/json"
-    lineblocs "bitbucket.org/infinitet3ch/lineblocs-go-helpers"
+    lineblocs "github.com/Lineblocs/go-helpers"
+
 	"strings"
 	"io/ioutil"
 	"strconv"
