@@ -230,7 +230,7 @@ func getCPUSample() (float64, error) {
             }
         }
     }
-    return nil, float64( total )
+    return float64( total ), nil
 }
 
 func SafeUpdateLiveStat(server *lineblocs.MediaServer, field string, value string) (error) {
