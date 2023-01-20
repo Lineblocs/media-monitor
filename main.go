@@ -207,11 +207,12 @@ func getCPUSample2() (float64, error) {
     */
     return 0,errors.New("could not get stat..")
 }
-func getCPUSample() (idle, total uint64) {
+func getCPUSample() (float64, error) {
     contents, err := ioutil.ReadFile("/proc/stat")
     if err != nil {
-        return
+        return  0, err
     }
+    var total uint64 = 0
     lines := strings.Split(string(contents), "\n")
     for _, line := range(lines) {
         fields := strings.Fields(line)
@@ -224,13 +225,12 @@ func getCPUSample() (idle, total uint64) {
                 }
                 total += val // tally up all the numbers to get total ticks
                 if i == 4 {  // idle is the 5th field in the cpu line
-                    idle = val
+                    //idle = val
                 }
             }
-            return
         }
     }
-    return
+    return nil, float64( total )
 }
 
 func SafeUpdateLiveStat(server *lineblocs.MediaServer, field string, value string) (error) {
