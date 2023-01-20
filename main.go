@@ -271,7 +271,12 @@ func updateLiveStats() {
 		}
 	}
 
-    total0,err := getCPUSample2()
+    useK8sMetrics := os.Getenv("RUNNING_K8S_METRICS_SERVER")
+    if useK8sMetrics == "off" {
+        total0,err := getCPUSample()
+    } else {
+        total0,err := getCPUSample2()
+    }
     if err != nil {
         fmt.Println("Error: ", err)
         return
