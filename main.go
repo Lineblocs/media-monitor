@@ -272,7 +272,7 @@ func updateLiveStats() {
 	}
 
     useK8sMetrics := os.Getenv("RUNNING_K8S_METRICS_SERVER")
-    var total0 int;
+    var total0 float64;
     var err error;
     if useK8sMetrics == "off" {
         total0,err = getCPUSample()
