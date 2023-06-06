@@ -365,7 +365,7 @@ func setupCurrentNode() (error) {
 
 func main() {
     var err error
-	fmt.Println("starting smudge node..");
+	fmt.Println("starting media monitor")
     channel = make(chan []*lineblocs.MediaServer)
     servers,err = CreateMediaServers()
 	if err != nil {

@@ -3,7 +3,7 @@ module lineblocs.com/media-monitor
 go 1.17
 
 require (
-	github.com/Lineblocs/go-helpers v0.0.0-20221215231109-1cd12c0bfaa6
+	github.com/Lineblocs/go-helpers v0.0.4-0.20230505211511-fb022ea7b64a
 	github.com/clockworksoul/smudge v1.0.1
 	github.com/nadirhamid/amigo v0.1.12
 	k8s.io/api v0.26.0
@@ -14,6 +14,20 @@ require (
 
 require (
 	github.com/aws/aws-sdk-go v1.44.161 // indirect
+	github.com/aws/aws-sdk-go-v2 v1.17.6 // indirect
+	github.com/aws/aws-sdk-go-v2/config v1.18.18 // indirect
+	github.com/aws/aws-sdk-go-v2/credentials v1.13.17 // indirect
+	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.13.0 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/configsources v1.1.30 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.4.24 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/ini v1.3.31 // indirect
+	github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs v1.20.6 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.24 // indirect
+	github.com/aws/aws-sdk-go-v2/service/sso v1.12.5 // indirect
+	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.14.5 // indirect
+	github.com/aws/aws-sdk-go-v2/service/sts v1.18.6 // indirect
+	github.com/aws/smithy-go v1.13.5 // indirect
+	github.com/bshuster-repo/logrus-logstash-hook v1.1.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/emicklei/go-restful/v3 v3.9.0 // indirect
 	github.com/go-logr/logr v1.2.3 // indirect
@@ -29,6 +43,7 @@ require (
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/imdario/mergo v0.3.6 // indirect
+	github.com/innix/logrus-cloudwatch v1.0.0 // indirect
 	github.com/ivahaev/amigo v0.1.10 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
@@ -40,8 +55,11 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/satori/go.uuid v1.2.0 // indirect
+	github.com/sirupsen/logrus v1.9.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/stripe/stripe-go/v71 v71.48.0 // indirect
+	github.com/t-tomalak/logrus-easy-formatter v0.0.0-20190827215021-c074f06c5816 // indirect
 	github.com/ttacon/builder v0.0.0-20170518171403-c099f663e1c2 // indirect
 	github.com/ttacon/libphonenumber v1.2.1 // indirect
 	golang.org/x/net v0.3.1-0.20221206200815-1e63c2f08a10 // indirect
